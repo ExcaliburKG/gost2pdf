@@ -1,0 +1,36 @@
+﻿{
+  "name": "GOST2PDF",
+  "short_name": "GOST2PDF",
+  "version": "1.1.5",
+  "manifest_version": 2,
+  "description": "Позволяет скачивать ГОСТы с сайта РосСтандарта в один щелчок мышью и сохранять их в PDF",
+  "options_page": "options.html",
+  "update_url": "http://clients2.google.com/service/update2/crx",
+  "icons": {
+      "16": "icon48.png",  
+      "24": "icon48.png",    
+      "32": "icon48.png",       
+      "48": "icon48.png"
+   },
+  "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "shared.js", "csProtectGostList.js", "libs/const.js", "libs/jspdf.js", "libs/jspdf.plugin.addimage.js", "libs/jspdf.plugin.sillysvgrenderer.js" ],
+      "matches": [ "*://*.protect.gost.ru/*"],
+      "run_at": "document_end"
+   },
+   {
+      "all_frames": true,
+      "js": [ "shared.js", "csGostinfoList.js", "libs/const.js", "libs/jspdf.js", "libs/jspdf.plugin.addimage.js", "libs/jspdf.plugin.sillysvgrenderer.js" ],
+      "matches": [ "*://*.gostinfo.ru/*" ],
+      "run_at": "document_end"   
+   }  
+   ],
+  "page_action": {
+      "default_icon": "icon48.png",
+      "default_title": "GOST2PDF"
+   },
+  "permissions": [
+    "tabs", "*://*.gostinfo.ru/*", "*://*.protect.gost.ru/*"
+  ],
+  "web_accessible_resources": [ "icon48.png", "images/download.png", "images/cat.gif", "contextMenus", "webRequest", "webRequestBlocking", "unlimitedStorage" ]
+}
