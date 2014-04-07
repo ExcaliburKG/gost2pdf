@@ -29,7 +29,7 @@ function AppendIcons()
 			 pickLink.setAttribute("style", "display: block; float: left; margin-right: 6px;");
 			 pickLink.setAttribute("title", "Скачать ГОСТ на диск");
 			 pickLink.setAttribute("href", "#");		 
-			 pickLink.onclick = (function(LinkStrA) { return function() { showProgressSplash(true, GostDoc); window.SelDocTitle = DocTitle; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr);
+			 pickLink.onclick = (function(LinkStrA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitle; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr);
 			 pickLink.appendChild(pickImage);
 			 TitleElement[0].insertBefore(pickLink, TitleElement[0].firstChild);
 		  }
@@ -53,7 +53,7 @@ function AppendIcons()
 					var DocTitleP2 = TocGostInfo[1].rows[k+1].cells[2].childNodes[0].nodeValue.trim();}
 					var DocTitle = DocTitleP1 + " " + DocTitleP2;	
 					pickLink.setAttribute("title", "Скачать ГОСТ на диск");
-					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, GostDoc); window.SelDocTitle = DocTitleA; console.log(DocTitleA); window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
+					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitleA; console.log(DocTitleA); window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
 					pickImage.setAttribute("src", IconDownloadUrl);
 					pickImage.setAttribute("align", "absmiddle");
 					pickImage.setAttribute("alt", "Скачать ГОСТ");
@@ -76,7 +76,7 @@ function LoadGostImages(UrlSrc, GostPage)
   }
   if (CurrentPage >= PagesTotal)
   {
-	showProgressSplash(false, GostDoc);
+	showProgressSplash(false, document);
 	var pgcont = '<html><head><title>'+window.SelDocTitle+'</title></head><body>';
 	for (var b=0; b < PagesTotal; b++)
 	{
