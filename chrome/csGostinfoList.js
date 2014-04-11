@@ -4,7 +4,7 @@ function AppendIcons()
 {
  var IconDownloadUrl = chrome.extension.getURL("images/download.png");
  var divs = document.getElementsByTagName("img");
- var anchors = document.getElementsByTagName('a');
+ var anchors = document.getElementsByTagName("a");
  var hrefs = [];
   for (var i=0; i < anchors.length; i++)
   {
@@ -12,7 +12,7 @@ function AppendIcons()
     hrefs.push(anchors[i]);
   }
   var LegendElement = document.getElementsByTagName("legend");
-  if  ((LegendElement.length > 0) && (LegendElement[0].innerText != 'Поиск:'))// we are on the first page of selected gost, we'll make a single link insertion
+  if  ((LegendElement.length > 0) && (LegendElement[0].innerText != "Поиск:"))// we are on the first page of selected gost, we'll make a single link insertion
 	{
 	  var TitleElement = document.getElementsByTagName("h2");
 	  if (TitleElement.length > 0)
@@ -53,7 +53,7 @@ function AppendIcons()
 					var DocTitleP2 = TocGostInfo[1].rows[k+1].cells[2].childNodes[0].nodeValue.trim();}
 					var DocTitle = DocTitleP1 + " " + DocTitleP2;	
 					pickLink.setAttribute("title", "Скачать ГОСТ на диск");
-					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitleA; console.log(DocTitleA); window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
+					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitleA; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
 					pickImage.setAttribute("src", IconDownloadUrl);
 					pickImage.setAttribute("align", "absmiddle");
 					pickImage.setAttribute("alt", "Скачать ГОСТ");
@@ -66,7 +66,7 @@ function AppendIcons()
 
 function LoadGostImages(UrlSrc, GostPage)
 {
- var tempDiv = document.createElement('div');
+ var tempDiv = document.createElement("div");
  tempDiv.innerHTML = GostPage.replace(/<script(.|\s)*?\/script>/g, '');
  if (CurrentPage < 1) // first run, get total pages
   {
@@ -77,7 +77,7 @@ function LoadGostImages(UrlSrc, GostPage)
   if (CurrentPage >= PagesTotal)
   {
 	showProgressSplash(false, document);
-	var pgcont = '<html><head><title>'+window.SelDocTitle+'</title></head><body>';
+	var pgcont = "<html><head><title>"+window.SelDocTitle+"</title></head><body>";
 	for (var b=0; b < PagesTotal; b++)
 	{
      pgcont += '<img src="'+window.DataImgs[b]+'" style="margin-bottom: 30px;" />'
@@ -85,7 +85,46 @@ function LoadGostImages(UrlSrc, GostPage)
 	pgcont += "</body></html>";
 	
 	var docwindow = window.open();
+	docwindow.onbeforeunload = function () 
+	{
+		xmlhttp.abort();
+		GostDoc = null;
+		window.SelDocTitle = "";
+		showProgressSplash(false, docwindow.document);
+	};
 	docwindow.document.open();
+	// TODO: prevent title > windows MAX_PATH
+	docwindow.document.title = window.SelDocTitle; 
+	var docHtml = docwindow.document.createElement("html");
+	var docHead = docwindow.document.createElement("head");
+	var docBody = docwindow.document.createElement("body");
+	docHtml.appendChild(docHead);
+	docHtml.appendChild(docBody);
+	docwindow.document.appendChild(docHtml);
+	docBody = docwindow.document.getElementsByTagName("body")[0];
+	for (var b=0; b < PagesTotal; b++)
+	 {
+		 var ImgPage = document.createElement("img");
+		 ImgPage.onload = function()
+		 {
+			if(PagesLoadedC >= PagesK.length-1)
+			 {
+			  showProgressSplash(false, docwindow.document);
+			  docwindow.print({bUI: true, bSilent: false, bShrinkToFit: true}); 
+			  docwindow.document.close();
+			  return;
+			 }
+			PagesLoadedC++;
+		 }
+		 ImgPage.setAttribute("src", 'http://protect.gost.ru/image.ashx?page='+PagesK[b]);
+		 docBody.appendChild(ImgPage);
+		 if (typeof (StatusSpan) != "undefined")  
+			 { 
+				StatusSpan.innerText = b + " из " + PagesK.length;
+			 }	
+	 }
+	
+	
 	docwindow.document.write(pgcont);
 	docwindow.print({bUI: true, bSilent: false, bShrinkToFit: true});
 	docwindow.document.close();
@@ -94,15 +133,16 @@ function LoadGostImages(UrlSrc, GostPage)
 	return 0;
   }
  var CssEntries = tempDiv.getElementsByTagName("link");
- if ((CssEntries == undefined) && (CssEntries.length <= 0)) { return 1;}
+ if ((typeof (CssEntries) == "undefined") && (CssEntries.length <= 0)) 
+	{ return 1;}
  window.DataImgs[CurrentPage] = CssEntries[0].href.replace("GetPageCSS", "GetPageContent");
  CurrentPage++;
- var StatusSpan = document.getElementById('StatusLabel');
- if (StatusSpan != undefined)  
+ var StatusSpan = document.getElementById("StatusLabel");
+ if (typeof (StatusSpan) != "undefined")  
  { 
 	  StatusSpan.innerText = CurrentPage + " из " + PagesTotal;
  }	  
- loadXMLDoc( UrlSrc.substring(0, UrlSrc.lastIndexOf('=')+1) + (CurrentPage+1), LoadGostImages);
+ loadXMLDoc( UrlSrc.substring(0, UrlSrc.lastIndexOf("=")+1) + (CurrentPage+1), LoadGostImages);
 }
 
 function loadXMLDoc(srcURL, CallbackFunc)

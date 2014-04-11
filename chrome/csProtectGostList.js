@@ -9,30 +9,30 @@ var IconDownloadUrl = chrome.extension.getURL("images/download.png");
 var PageUrl = document.location.href;
 			if(contains(PageUrl.toLowerCase(), consts.PgSubStrGostPage.toLowerCase())) 
 			{
-				PageType = 0; // страница госта
+				PageType = 0; // we are on the inner gost page
 			}
 			else 
 			{
-				PageType = 1; // список гостов (таблица)
+				PageType = 1; // we are on the gost list page (table)
 			}    
 
 	switch(PageType)
 	 {
-		case 0: // если мы находимся на подстранице госта
+		case 0:
 			for (var i = 0; i < divs.length; ++i)
 			{
 				if (divs[i].src === "http://protect.gost.ru/i/ext/icon-ext-pdf.gif") 
 				{
 					var pickImage = document.createElement("img");
 					var pickLink = document.createElement("a");
-					var docLnkNode = divs[i].parentNode.parentNode.childNodes[3].childNodes[1]; // получаем элемент ссылку на гост
+					var docLnkNode = divs[i].parentNode.parentNode.childNodes[3].childNodes[1];
 					pickLink.setAttribute("style", "margin-left: 5px;");
 					pickLink.setAttribute("title", StrsRuRu.StrBtnDownloadAlt);
 					var LinkStr = consts.StrGostDownloadLnk0+getQueryVar(docLnkNode.href, "month")+"&year="+getQueryVar(docLnkNode.href, "year")+"&search=&RegNum=1&DocOnPageCount=15&id="+getQueryVar(docLnkNode.href, "id");
 					
 					var TocGostInfo = document.getElementsByClassName(consts.PgCssGostTableClass);
 					if (TocGostInfo.length > 0) 
-					{ // если нашли таблицу с информацией о госте
+					{
 						var DocTitleP1 = TocGostInfo[0].rows[0].cells[1].childNodes[0].nodeValue;
 						var DocTitleP2 = TocGostInfo[0].rows[1].cells[1].childNodes[0].nodeValue;
 						var DocTitle = DocTitleP1 + " " + DocTitleP2;			
@@ -47,28 +47,27 @@ var PageUrl = document.location.href;
 				}
 			}			
 			break
-		case 1: // если мы находимся на главной странице
-		default: // если мы находимся на главной странице
+		case 1:
+		default: 
 		   var TocElement = document.getElementsByClassName("typetable");
 		   if (TocElement.length > 0) 
-		   { // если нашли таблицу со списком гостов
-			   TocElement[0].childNodes[1].childNodes[1].childNodes[1].setAttribute("style", "width: 16%;"); // расширяем первую колонку, чтобы кнопка влезла
-			   TocElement[0].childNodes[1].childNodes[1].childNodes[5].setAttribute("width", "auto"); // убираем фиксированную ширину третьей колонки
+		   {
+			   TocElement[0].childNodes[1].childNodes[1].childNodes[1].setAttribute("style", "width: 16%;"); // extend first column to make room for a download button
+			   TocElement[0].childNodes[1].childNodes[1].childNodes[5].setAttribute("width", "auto"); // make 3rd column resizable
 			   
 			   for (var k = 0; k < tds.length; ++k) 
 				{   
 						//tds[k].childNodes[1].setAttribute("style", "float: left; margin-right: 6px;");
-						var docLnkNode = tds[k].childNodes[1].firstChild; // получаем элемент ссылку на гост					
+						var docLnkNode = tds[k].childNodes[1].firstChild;					
 						var pickImage = document.createElement("img");
 						var pickLink = document.createElement("a");              
 						pickLink.setAttribute("style", "display: block; float: left; margin-right: 6px;");
 						//var LinkStr = consts.StrGostDownloadLnk0+getQueryVar(docLnkNode.href, "month")+"&year="+getQueryVar(docLnkNode.href, "year")+"&search=&RegNum=1&DocOnPageCount=15&id="+((getQueryVar(docLnkNode.href, "id")-IdOffset));
 						var LinkStr = docLnkNode.href;
-						// получаем наименование госта
 						var DocTitleP1 = TocElement[0].rows[k+1].cells[0].getElementsByTagName("a")[0].innerText;
 						var DocTitleP2 = TocElement[0].rows[k+1].cells[1].childNodes[1].childNodes[0].nodeValue;
 						var DocTitle = DocTitleP1 + " " + DocTitleP2;
-						DocTitle = DocTitle.replace(/[^\w\s]/gi, '_'); // replace all characters that are not allowed in a file-system path
+						DocTitle = DocTitle.replace("[^\\w|\\s]", "_"); // replace all characters that are not allowed in a file-system path
 						pickLink.setAttribute("title", StrsRuRu.StrBtnDownloadAlt);
 						pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { window.SelDocTitle = DocTitleA; loadXMLDoc(LinkStrA, getGostDownloadURL); }; })(LinkStr, DocTitle);
 						pickImage.setAttribute("src", IconDownloadUrl);
@@ -81,15 +80,12 @@ var PageUrl = document.location.href;
 			}			
 			break;
 	 }
-
-	   
-
 }
 
 function getGostDownloadURL(GostPg)
 {
-	var pageContainer = document.createElement('div');
-	pageContainer.innerHTML = GostPg.replace(/<script(.|\s)*?\/script>/g, '');
+	var pageContainer = document.createElement("div");
+	pageContainer.innerHTML = GostPg.replace("/<script(.|\s)*?\/script>/g", "");
 	var pTables = pageContainer.getElementsByTagName("table");
 	//var yearGost = pTables[1].rows[0].cells[0].childNodes[3].firstChild.nodeValue.trim().substr(0, 4);
 	loadXMLDoc(pTables[6].rows[0].cells[1].childNodes[1].href, LoadGostImages);
@@ -97,8 +93,8 @@ function getGostDownloadURL(GostPg)
 
 function LoadGostImages(GostPage)
 {
- var tempDiv = document.createElement('div');
- tempDiv.innerHTML = GostPage.replace(/<script(.|\s)*?\/script>/g, '');
+ var tempDiv = document.createElement("div");
+ tempDiv.innerHTML = GostPage.replace("/<script(.|\s)*?\/script>/g", "");
  var links = tempDiv.getElementsByTagName("a");
  var PagesK = [];
  var k = 0;
@@ -135,8 +131,16 @@ function LoadGostImages(GostPage)
 	//pgcont += "</body></html>";
 	
 	var docwindow = window.open();
+	docwindow.onbeforeunload = function () 
+	{
+		xmlhttp.abort();
+		GostDoc = null;
+		window.SelDocTitle = "";
+		showProgressSplash(false, docwindow.document);
+	};
 	docwindow.document.open();
-	docwindow.document.title = window.SelDocTitle; // prevent title > windows MAX_PATH
+	// TODO: prevent title > windows MAX_PATH
+	docwindow.document.title = window.SelDocTitle; 
 	var docHtml = docwindow.document.createElement("html");
 	var docHead = docwindow.document.createElement("head");
 	var docBody = docwindow.document.createElement("body");
@@ -144,12 +148,12 @@ function LoadGostImages(GostPage)
 	docHtml.appendChild(docBody);
 	docwindow.document.appendChild(docHtml);
 	showProgressSplash(true, docwindow.document);
-	var StatusSpan = docwindow.document.getElementById('StatusLabel');
+	var StatusSpan = docwindow.document.getElementById("StatusLabel");
 	//TODO: Rewrite this part properly
 	docBody = docwindow.document.getElementsByTagName("body")[0];
 	for (var b=0; b < PagesK.length; b++)
 	 {
-		 var ImgPage = document.createElement('img');
+		 var ImgPage = document.createElement("img");
 		 ImgPage.onload = function()
 		 {
 			if(PagesLoadedC >= PagesK.length-1)
@@ -163,7 +167,7 @@ function LoadGostImages(GostPage)
 		 }
 		 ImgPage.setAttribute("src", 'http://protect.gost.ru/image.ashx?page='+PagesK[b]);
 		 docBody.appendChild(ImgPage);
-		 if (StatusSpan != undefined)  
+		 if (typeof (StatusSpan) != "undefined")  
 			 { 
 				StatusSpan.innerText = b + " из " + PagesK.length;
 			 }	
@@ -185,7 +189,7 @@ function loadXMLDoc(srcURL, CallBackFunc)
         {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
             {
-                if (CallBackFunc == undefined)
+                if (typeof (CallBackFunc) === "undefined")
 					{
 						return xmlhttp.responseText;
 					}
@@ -194,5 +198,5 @@ function loadXMLDoc(srcURL, CallBackFunc)
         }
         xmlhttp.open("GET", srcURL, true);
 		//xmlhttp.responseType = "document";
-        xmlhttp.send();		
+        xmlhttp.send(null);		
 }

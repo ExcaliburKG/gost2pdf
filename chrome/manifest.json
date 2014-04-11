@@ -1,7 +1,7 @@
 ﻿{
   "name": "GOST2PDF",
   "short_name": "GOST2PDF",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "manifest_version": 2,
   "description": "Позволяет скачивать ГОСТы с сайта РосСтандарта в один щелчок мышью и сохранять их в PDF",
   "options_page": "options.html",
@@ -30,7 +30,7 @@
       "default_title": "GOST2PDF"
    },
   "permissions": [
-    "tabs", "*://*.gostinfo.ru/*", "*://*.protect.gost.ru/*"
+    "*://*.gostinfo.ru/*", "*://*.protect.gost.ru/*"
   ],
   "web_accessible_resources": [ "icon48.png", "images/download.png", "images/cat.gif", "contextMenus", "webRequest", "webRequestBlocking", "unlimitedStorage" ]
 }

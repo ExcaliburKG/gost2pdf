@@ -1,4 +1,4 @@
-String.prototype.trim = function() {  return this.replace(/^\s+|\s+$/g, '');  }
+String.prototype.trim = function() {  return this.replace("/^\s+|\s+$/g", "");  }
 var consts = {
    'StrGostDownloadLnk0': 'http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=',
    'PgSubStrGostTable': 'default.aspx?control=6',
@@ -16,6 +16,7 @@ var StrsRuRu = {
 };
 
 var GostDoc;
+var xmlhttp;
 
 function init()
 {
@@ -121,20 +122,20 @@ function getQueryVar(urlSrc, variable)
 function showProgressSplash(ShowIt, doc)
 {
 	var bodyElement = doc.getElementsByTagName("body")[0];
-	if(bodyElement == undefined)
+	if(typeof (bodyElement) == "undefined")
 	  {
 		return -1;
 	  }
 	if (ShowIt)
 	{
 	var CatPic = chrome.extension.getURL("images/cat.gif");
-	var splashDiv = doc.createElement('div');
+	var splashDiv = doc.createElement("div");
 	  splashDiv.id = "Splash_containter";
 	  splashDiv.style.cssText = "margin: 10px auto; position: fixed; padding:0; width: 100%; overflow: hidden; min-height:100%; height:100%; left: 0px; top: 0px; z-index: 9998; background: #FFFFFF; text-align: center;";
 	  splashDiv.innerHTML = "<img id='cat' style=\"position: absolute; z-index: 9999; right: -20%;\" src=\""+CatPic+"\" alt=\"\" /> <div style=\"position: relative; top: 50%; margin-top: -100px; font-size: 24px; font-weight: bold; font-family: Arial;\">"+StrsRuRu.StrProgressWait+"<span id=\"StatusLabel\">.</span></div>"
 	  bodyElement.setAttribute("style", "overflow: hidden;");
 	  bodyElement.appendChild(splashDiv);
-	  var elem = doc.getElementById('cat');
+	  var elem = doc.getElementById("cat");
 	  var pos = -20;
 
 
@@ -142,7 +143,7 @@ function showProgressSplash(ShowIt, doc)
 	  {
 		pos++;
 
-		elem.style.right = (pos / 3) + '%';
+		elem.style.right = (pos / 3) + "%";
 		if (pos == 300) {
 			pos = -25;
 		}
@@ -152,8 +153,8 @@ function showProgressSplash(ShowIt, doc)
 	else
 	{
 	 clearInterval(SplashTimer);
-	 var splashDiv = doc.getElementById('Splash_containter');
-	 if (splashDiv === 'undefined')  { return;}	 
+	 var splashDiv = doc.getElementById("Splash_containter");
+	 if (typeof (splashDiv) === "undefined")  { return;}	 
 	 splashDiv.parentNode.removeChild(splashDiv);
 	}
 }
@@ -164,7 +165,7 @@ function getQueryVar(urlSrc, variable)
     //var query = window.location.search.substring(1);
     var vars = urlSrc.split(/[\\?|&]/);
     for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split('=');
+        var pair = vars[i].split("=");
         if (decodeURIComponent(pair[0]) == variable) {
             return decodeURIComponent(pair[1]);
         }
