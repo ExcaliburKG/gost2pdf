@@ -3,6 +3,7 @@ var consts = {
    'StrGostDownloadLnk0': 'http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=',
    'PgSubStrGostTable': 'default.aspx?control=6',
    'PgSubStrGostPage': 'document.aspx?control=7',
+   'PgSubStrImgPage': 'http://protect.gost.ru/image.ashx?page=',
    'PgCssGostTableClass': 'typetable',
    'GostIdOffset': 7896,
    'GostIdOldOffset': 7897
@@ -157,6 +158,7 @@ function showProgressSplash(ShowIt, doc)
 	 if (typeof (splashDiv) === "undefined")  { return;}	 
 	 splashDiv.parentNode.removeChild(splashDiv);
 	}
+	
 }
  
  

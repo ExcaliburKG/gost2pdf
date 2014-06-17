@@ -25,9 +25,9 @@ function AppendIcons()
 			 window.LinkStr = "http://www.gostinfo.ru/PRI/Page/GetPage?MaterialID="+getQueryVar(hrefs[0].href, "MaterialID")+"&lpage=2&page=1";
 			 pickImage.setAttribute("src", IconDownloadUrl);		
 			 pickImage.setAttribute("align", "absmiddle");
-			 pickImage.setAttribute("alt", "Скачать ГОСТ"); 
+			 pickImage.setAttribute("alt", StrsRuRu.StrBtnDownloadAlt); 
 			 pickLink.setAttribute("style", "display: block; float: left; margin-right: 6px;");
-			 pickLink.setAttribute("title", "Скачать ГОСТ на диск");
+			 pickLink.setAttribute("title", StrsRuRu.StrBtnDownloadAlt);
 			 pickLink.setAttribute("href", "#");		 
 			 pickLink.onclick = (function(LinkStrA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitle; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr);
 			 pickLink.appendChild(pickImage);
@@ -40,23 +40,23 @@ function AppendIcons()
 		   for (var k = 0; k < hrefs.length; ++k) 
 			{   
 					//tds[k].childNodes[1].setAttribute("style", "float: left; margin-right: 6px;");
-					//var docLnkNode = hrefs[k]; // получаем элемент ссылку на гост
+					//var docLnkNode = hrefs[k];
 					var pickImage = document.createElement("img");
 					var pickLink = document.createElement("a");              
 					pickLink.setAttribute("style", "display: block; float: left; margin-right: 6px;");
 					window.LinkStr = "http://www.gostinfo.ru/PRI/Page/GetPage?MaterialID="+getQueryVar(hrefs[k].href, "MaterialID")+"&lpage=2&page=1";
 					//var LinkStr = anchors[k];
-					// получаем наименование госта
+					// get GOST title
 					var TocGostInfo = document.getElementsByTagName("table");
-					if (TocGostInfo.length > 0) { // если нашли таблицу с информацией о госте
+					if (TocGostInfo.length > 0) {
 					var DocTitleP1 = TocGostInfo[1].rows[k+1].cells[1].childNodes[1].innerText.trim();
 					var DocTitleP2 = TocGostInfo[1].rows[k+1].cells[2].childNodes[0].nodeValue.trim();}
 					var DocTitle = DocTitleP1 + " " + DocTitleP2;	
-					pickLink.setAttribute("title", "Скачать ГОСТ на диск");
+					pickLink.setAttribute("title", StrsRuRu.StrBtnDownloadAlt);
 					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitleA; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
 					pickImage.setAttribute("src", IconDownloadUrl);
 					pickImage.setAttribute("align", "absmiddle");
-					pickImage.setAttribute("alt", "Скачать ГОСТ");
+					pickImage.setAttribute("alt", StrsRuRu.StrBtnDownloadAlt);
 					pickLink.appendChild(pickImage);
 					pickLink.setAttribute("href", "#");
 					hrefs[k].insertBefore(pickLink, hrefs[k].firstChild);
@@ -71,8 +71,10 @@ function LoadGostImages(UrlSrc, GostPage)
  if (CurrentPage < 1) // first run, get total pages
   {
 	var PagesTotalTag = tempDiv.getElementsByTagName("legend");
-	PagesTotal = parseInt(PagesTotalTag[0].innerText.substring(PagesTotalTag[0].innerText.length, PagesTotalTag[0].innerText.length-3).trim());
+	window.PagesLoadedC = 0;
+	window.PagesTotal = parseInt(PagesTotalTag[0].innerText.substring(PagesTotalTag[0].innerText.length, PagesTotalTag[0].innerText.length-3).trim());
 	window.DataImgs = new Array(PagesTotal);
+
   }
   if (CurrentPage >= PagesTotal)
   {
@@ -107,29 +109,24 @@ function LoadGostImages(UrlSrc, GostPage)
 		 var ImgPage = document.createElement("img");
 		 ImgPage.onload = function()
 		 {
-			if(PagesLoadedC >= PagesK.length-1)
+			if(PagesLoadedC >= PagesTotal-1)
 			 {
-			  showProgressSplash(false, docwindow.document);
+			  CurrentPage = 0;
+			  PagesLoadedC = 0;
+			  PagesTotal = 0;			  
 			  docwindow.print({bUI: true, bSilent: false, bShrinkToFit: true}); 
 			  docwindow.document.close();
 			  return;
 			 }
 			PagesLoadedC++;
 		 }
-		 ImgPage.setAttribute("src", 'http://protect.gost.ru/image.ashx?page='+PagesK[b]);
+		 ImgPage.setAttribute("src", window.DataImgs[b]);
 		 docBody.appendChild(ImgPage);
 		 if (typeof (StatusSpan) != "undefined")  
 			 { 
-				StatusSpan.innerText = b + " из " + PagesK.length;
+				StatusSpan.innerText = b + StrsRuRu.StrFrom + PagesTotal;
 			 }	
 	 }
-	
-	
-	docwindow.document.write(pgcont);
-	docwindow.print({bUI: true, bSilent: false, bShrinkToFit: true});
-	docwindow.document.close();
-	CurrentPage = 0;
-	PagesTotal = 0;
 	return 0;
   }
  var CssEntries = tempDiv.getElementsByTagName("link");
@@ -140,7 +137,7 @@ function LoadGostImages(UrlSrc, GostPage)
  var StatusSpan = document.getElementById("StatusLabel");
  if (typeof (StatusSpan) != "undefined")  
  { 
-	  StatusSpan.innerText = CurrentPage + " из " + PagesTotal;
+	  StatusSpan.innerText = CurrentPage + StrsRuRu.StrFrom + PagesTotal;
  }	  
  loadXMLDoc( UrlSrc.substring(0, UrlSrc.lastIndexOf("=")+1) + (CurrentPage+1), LoadGostImages);
 }

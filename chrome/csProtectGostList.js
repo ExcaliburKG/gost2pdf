@@ -37,7 +37,7 @@ var PageUrl = document.location.href;
 						var DocTitleP2 = TocGostInfo[0].rows[1].cells[1].childNodes[0].nodeValue;
 						var DocTitle = DocTitleP1 + " " + DocTitleP2;			
 					}
-					pickLink.onclick = (function(LinkStrA) { return function() { window.SelDocTitle = DocTitle; loadXMLDoc(LinkStrA); }; })(LinkStr);
+					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { window.SelDocTitle = DocTitleA; loadXMLDoc(LinkStrA, getGostDownloadURL); }; })(LinkStr, DocTitle);
 					pickImage.setAttribute("src", IconDownloadUrl);
 					pickImage.setAttribute("align", "absmiddle");
 					pickImage.setAttribute("alt", StrsRuRu.StrBtnDownloadAlt);
@@ -165,11 +165,11 @@ function LoadGostImages(GostPage)
 			 }
 			PagesLoadedC++;
 		 }
-		 ImgPage.setAttribute("src", 'http://protect.gost.ru/image.ashx?page='+PagesK[b]);
+		 ImgPage.setAttribute("src", consts.PgSubStrImgPage+PagesK[b]);
 		 docBody.appendChild(ImgPage);
 		 if (typeof (StatusSpan) != "undefined")  
 			 { 
-				StatusSpan.innerText = b + " из " + PagesK.length;
+				StatusSpan.innerText = b + StrsRuRu.StrFrom + PagesK.length;
 			 }	
 	 }
 }
