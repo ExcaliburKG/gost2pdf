@@ -1,33 +1,41 @@
-// Save this script as `options.js`
-
 // Saves options to localStorage.
-function save_options() {
-  var select = document.getElementById("color");
-  var color = select.children[select.selectedIndex].value;
-  localStorage["favorite_color"] = color;
+function saveOptions() {
+  localStorage["gostFNameTpl"] = document.getElementById("gostFileNameTpl").value;
 
   // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
+  var status = document.getElementById("optionsStatus");
+  status.innerHTML = "Настройки сохранены";
+ // setTimeout(function() {
+ //   status.innerHTML = "";
+ // }, 2000);
 }
 
 // Restores select box state to saved value from localStorage.
-function restore_options() {
-  var favorite = localStorage["favorite_color"];
-  if (!favorite) {
+function loadOptions() {
+  var gostFNameTpl = localStorage["gostFNameTpl"];
+  if (!gostFNameTpl) {
     return;
   }
-  var select = document.getElementById("color");
-  for (var i = 0; i < select.children.length; i++) {
-    var child = select.children[i];
-    if (child.value == favorite) {
-      child.selected = "true";
-      break;
-    }
-  }
+  var gostFNameTplInput = document.getElementById("gostFileNameTpl");
+  if (!gostFNameTplInput) {
+    return;
+  }  
+  gostFNameTplInput.value = gostFNameTpl;
 }
-document.addEventListener('DOMContentReady', restore_options);
-document.querySelector('#save').addEventListener('click', save_options);
+
+function resetOptions() {
+  localStorage["gostFNameTpl"] = "ГОСТ %номер_год - %имя";
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("optionsStatus");
+  status.innerHTML = "Настройки сброшены";
+ // setTimeout(function() {
+ //   status.innerHTML = "";
+ // }, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelector('#btnSaveOpts').addEventListener('click', saveOptions);
+	document.querySelector('#btnResetOpts').addEventListener('click', resetOptions);
+	loadOptions();
+});

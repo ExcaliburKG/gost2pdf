@@ -190,3 +190,19 @@ if (document.documentElement)
   init();
 else
   window.setTimeout(init, 0);
+  
+function ConstructDocTitle(TitleArray, wndSrc) {
+ var gostNameTpl;
+ chrome.runtime.sendMessage({method: "getLocalStorage", key: "gostFNameTpl"}, function(response) {
+		gostNameTpl = response.data;
+		if (!gostNameTpl) {
+			gostNameTpl = "ГОСТ %номер_год - %имя";
+			chrome.runtime.sendMessage({method: "setLocalStorage", key: "gostFNameTpl", val: gostNameTpl});
+		}
+		gostNameTpl = gostNameTpl.replace("%номер_год", TitleArray[0]);
+		gostNameTpl = gostNameTpl.replace("%имя", TitleArray[1]); 
+		gostNameTpl = gostNameTpl.replace("%номер", TitleArray[2]); 
+		gostNameTpl = gostNameTpl.replace("[^\\w|\\s]", "_"); // replace all characters that are not allowed in a file-system path
+		wndSrc.document.title = gostNameTpl;
+	});
+}

@@ -2,6 +2,7 @@
 
 function AppendIcons()
 {
+ window.SelDocTitle = new Array(3);
  var IconDownloadUrl = chrome.extension.getURL("images/download.png");
  var divs = document.getElementsByTagName("img");
  var anchors = document.getElementsByTagName("a");
@@ -21,7 +22,10 @@ function AppendIcons()
 		  {
 			 var pickImage = document.createElement("img");
 			 var pickLink = document.createElement("a");
-			 var DocTitle = TitleElement[0].innerText;
+			 var DocTitle = new Array(3);
+			 DocTitle[0] = TitleElement[0].innerText.replace("ГОСТ ", "");
+			 DocTitle[1] = "";
+			 DocTitle[2] = TitleElement[0].innerText.substring(0, TitleElement[0].innerText.indexOf("-"));
 			 window.LinkStr = "http://www.gostinfo.ru/PRI/Page/GetPage?MaterialID="+getQueryVar(hrefs[0].href, "MaterialID")+"&lpage=2&page=1";
 			 pickImage.setAttribute("src", IconDownloadUrl);		
 			 pickImage.setAttribute("align", "absmiddle");
@@ -51,9 +55,13 @@ function AppendIcons()
 					if (TocGostInfo.length > 0) {
 					var DocTitleP1 = TocGostInfo[1].rows[k+1].cells[1].childNodes[1].innerText.trim();
 					var DocTitleP2 = TocGostInfo[1].rows[k+1].cells[2].childNodes[0].nodeValue.trim();}
-					var DocTitle = DocTitleP1 + " " + DocTitleP2;	
+					var DocTitle = DocTitleP1 + " " + DocTitleP2;
+					var DocTitle = new Array(3);
+					DocTitle[0] = DocTitleP1.replace("ГОСТ ", "");
+					DocTitle[1] = DocTitleP2;
+					DocTitle[2] = DocTitle[0].substring(0, DocTitle[0].indexOf("-"));
 					pickLink.setAttribute("title", StrsRuRu.StrBtnDownloadAlt);
-					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, document); window.SelDocTitle = DocTitleA; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
+					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { showProgressSplash(true, document); /* to delete */ window.SelDocTitle = DocTitleA; window.PagesTotal=0; window.CurrentPage=0; loadXMLDoc(LinkStrA, LoadGostImages); }; })(LinkStr, DocTitle);
 					pickImage.setAttribute("src", IconDownloadUrl);
 					pickImage.setAttribute("align", "absmiddle");
 					pickImage.setAttribute("alt", StrsRuRu.StrBtnDownloadAlt);
@@ -79,7 +87,7 @@ function LoadGostImages(UrlSrc, GostPage)
   if (CurrentPage >= PagesTotal)
   {
 	showProgressSplash(false, document);
-	var pgcont = "<html><head><title>"+window.SelDocTitle+"</title></head><body>";
+	var pgcont = "<html><head><title></title></head><body>";
 	for (var b=0; b < PagesTotal; b++)
 	{
      pgcont += '<img src="'+window.DataImgs[b]+'" style="margin-bottom: 30px;" />'
@@ -96,7 +104,7 @@ function LoadGostImages(UrlSrc, GostPage)
 	};
 	docwindow.document.open();
 	// TODO: prevent title > windows MAX_PATH
-	docwindow.document.title = window.SelDocTitle; 
+	ConstructDocTitle(window.SelDocTitle, docwindow); 
 	var docHtml = docwindow.document.createElement("html");
 	var docHead = docwindow.document.createElement("head");
 	var docBody = docwindow.document.createElement("body");

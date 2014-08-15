@@ -1,0 +1,54 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-family: Tahoma, sans-serif, Arial;	
+	/*background: url('images/bg3.jpg') no-repeat top fixed;*/
+	overflow-x: hidden;
+}
+
+hr { display: block; height: 1px;
+    border: 0; border-top: 1px solid #DCDCDC;
+    margin: 5px 0; padding: 0; }
+
+button {
+	margin: 5px 25px; padding: 5px;
+}	
+
+#btnResetOpts {
+ color: red;
+}
+	
+.optionsBlock {
+	color: #707070;
+	font-size: 13pt;
+	font-weight: bold;
+	margin: 20px 8px;
+}
+
+.optionsForm {
+	margin: 10px 25px;
+	font-size: 11pt;
+	font-weight: normal;
+}
+
+.optionsForm  p {
+ line-height: 1.5em;
+ font-size: 10pt; 
+}
+
+.varTpl {
+ font-weight: bold;
+}
+
+#OptionsStatus {
+	color: 21AF5F;
+ 	font-weight: bold;
+	font-size: 13pt;	
+	margin: 5px 25px;	
+}
+

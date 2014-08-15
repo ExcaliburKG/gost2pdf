@@ -2,6 +2,7 @@
 
 function AppendIcons()
 {
+window.SelDocTitle = new Array(3);
 var divs = document.getElementsByTagName("img");
 var tds = document.getElementsByClassName("tx12");
 var PageType=-1;
@@ -35,7 +36,11 @@ var PageUrl = document.location.href;
 					{
 						var DocTitleP1 = TocGostInfo[0].rows[0].cells[1].childNodes[0].nodeValue;
 						var DocTitleP2 = TocGostInfo[0].rows[1].cells[1].childNodes[0].nodeValue;
-						var DocTitle = DocTitleP1 + " " + DocTitleP2;			
+						var DocTitle = new Array(3); //DocTitleP1 + " " + DocTitleP2;
+						DocTitle[0] = DocTitleP1.replace("ГОСТ ", "");
+						DocTitle[1] = DocTitleP2;
+						DocTitle[2] = DocTitle[0].substring(0, DocTitle[0].indexOf("-"));						
+						
 					}
 					pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { window.SelDocTitle = DocTitleA; loadXMLDoc(LinkStrA, getGostDownloadURL); }; })(LinkStr, DocTitle);
 					pickImage.setAttribute("src", IconDownloadUrl);
@@ -66,10 +71,17 @@ var PageUrl = document.location.href;
 						var LinkStr = docLnkNode.href;
 						var DocTitleP1 = TocElement[0].rows[k+1].cells[0].getElementsByTagName("a")[0].innerText;
 						var DocTitleP2 = TocElement[0].rows[k+1].cells[1].childNodes[1].childNodes[0].nodeValue;
-						var DocTitle = DocTitleP1 + " " + DocTitleP2;
-						DocTitle = DocTitle.replace("[^\\w|\\s]", "_"); // replace all characters that are not allowed in a file-system path
+						var DocTitle = new Array(3); //DocTitleP1 + " " + DocTitleP2;
+						DocTitle[0] = DocTitleP1.replace("ГОСТ ", "");
+						DocTitle[1] = DocTitleP2;
+						DocTitle[2] = DocTitle[0].substring(0, DocTitle[0].indexOf("-"));
 						pickLink.setAttribute("title", StrsRuRu.StrBtnDownloadAlt);
-						pickLink.onclick = (function(LinkStrA, DocTitleA) { return function() { window.SelDocTitle = DocTitleA; loadXMLDoc(LinkStrA, getGostDownloadURL); }; })(LinkStr, DocTitle);
+						pickLink.onclick = (function(LinkStrA, DocTitleA) { 
+							return function() { 
+									window.SelDocTitle = DocTitleA; 
+									loadXMLDoc(LinkStrA, getGostDownloadURL); 
+							}; 
+						})(LinkStr, DocTitle);
 						pickImage.setAttribute("src", IconDownloadUrl);
 						pickImage.setAttribute("align", "absmiddle");
 						pickImage.setAttribute("alt", StrsRuRu.StrBtnDownloadAlt);
@@ -140,7 +152,7 @@ function LoadGostImages(GostPage)
 	};
 	docwindow.document.open();
 	// TODO: prevent title > windows MAX_PATH
-	docwindow.document.title = window.SelDocTitle; 
+	ConstructDocTitle(window.SelDocTitle, docwindow);
 	var docHtml = docwindow.document.createElement("html");
 	var docHead = docwindow.document.createElement("head");
 	var docBody = docwindow.document.createElement("body");
