@@ -1,0 +1,25 @@
+* {
+
+}
+
+body {
+	font-family: Tahoma, sans-serif, Arial;	
+	overflow-x: hidden;
+    line-height: 1.5em;
+    font-size: 13pt;
+}
+
+hr { display: block; height: 1px;
+    border: 0; border-top: 1px solid #DCDCDC;
+    margin: 5px 0; padding: 0; }
+
+.whatsNewHeader {
+    margin-left: 15px;
+    margin-top: 25px;
+}	
+	
+.updatesBlock {
+	color: #707070;
+	margin: 20px 8px;
+}
+

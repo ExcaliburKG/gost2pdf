@@ -1,0 +1,30 @@
+﻿{
+  "name": "GOST2PDF",
+  "short_name": "GOST2PDF",
+  "version": "1.1.9",
+  "manifest_version": 2,
+  "description": "Позволяет скачивать ГОСТы с сайта РосСтандарта в один щелчок мышью и сохранять их в PDF",
+  "update_url": "http://clients2.google.com/service/update2/crx",
+  "icons": {
+    "48": "img/icon48.png"
+  },
+  "options_page": "options.html",  
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [ {
+      "all_frames": true,
+    "js": [ "shared.js", "csProtectGostList.js", "jspdf.min.js", "FileSaver.js" ],
+      "matches": [ "*://*.protect.gost.ru/*"],
+      "run_at": "document_end"
+   }  
+   ],
+  "page_action": {
+    "default_icon": "img/icon48.png",
+    "default_title": "GOST2PDF"
+  },
+  "permissions": [
+    "*://*.protect.gost.ru/*", "storage"
+  ],
+  "web_accessible_resources": [ "img/icon48.png", "img/download.png", "img/loader.gif", "contextMenus", "webRequest", "webRequestBlocking", "unlimitedStorage" ]
+}

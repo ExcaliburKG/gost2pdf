@@ -1,0 +1,29 @@
+<html style="margin: 0; padding: 0; width: 100%; height: 100%;">
+<head>
+<title>Настройки GOST2PDF</title>
+<link href="css/options.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<script src="options.js"></script>
+<div class="optionsBlock">Общие настройки
+<hr/>
+	 <form class="optionsForm">
+		Шаблон имени ГОСТа&nbsp;&nbsp;<input style="width: 300px;" type="text" id="gostFileNameTpl" name="gostFileNameTpl"><br/>
+		<p style="margin-top: 5px;">Доступны переменные:</p>
+        <p><span class="varTpl">%автоназвание</span> - сформировать название автоматически из обозначения ГОСТа и его названия</p>
+		<p><span class="varTpl">%номер</span> - номер ГОСТа, например &laquo;31610.5&raquo;</p>
+		<p><span class="varTpl">%номер_год</span> - номер ГОСТа, включая год, например &laquo;31610.5-2012&raquo;</p>
+		<p><span class="varTpl">%имя</span> - наименование ГОСТа, например &laquo;Кефир. Технические условия&raquo;</p>
+        <p><span class="varTpl">%тип_документа</span> - тип документа, например &laquo;ГОСТ&raquo; или &laquo;Поправка к ГОСТУ&raquo; или &laquo;ПНСТ&raquo;</p>
+</form>
+	<form>
+		<button id="btnSaveOpts">Сохранить</button>
+		<button id="btnResetOpts" alt="Установить шаблон &laquo;по-умолчанию&raquo;">Сбросить</button>
+	</form>
+	<div id="optionsStatus"></div>
+</div>
+<div style="margin-left: 35px; margin-top: 50px; margin-bottom: 10px; font-family: Verdana; line-height: 20px; font-size: 11px; color: #CCCCCC">&copy; Горбунов Кирилл, 2017<br />
+<a href="http://pqm-online.com">www.pqm-online.com</a><br/>
+</div>
+</body>
+</html>

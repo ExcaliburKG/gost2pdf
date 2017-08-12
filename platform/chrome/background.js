@@ -8,3 +8,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	else
       sendResponse({});
 });
+
+chrome.runtime.onInstalled.addListener(function (object) {
+    var viewTabUrl = chrome.extension.getURL('updates.html');
+    chrome.tabs.create({ url: viewTabUrl }, function (tab) {
+        
+    });
+});
